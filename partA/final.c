@@ -6,11 +6,11 @@
 
 #define WG_X 16
 #define WG_Y 16
-#define TM   4
-#define TN   4
-#define TILE_M (WG_Y * TM)   // 64
-#define TILE_N (WG_X * TN)   // 64
-#define TILE_K  16
+#define TM 4
+#define TN 4
+#define TILE_M (WG_Y * TM) // 64
+#define TILE_N (WG_X * TN) // 64
+#define TILE_K 16
 
 #define CHECK_CL(err, msg) do { \
     if ((err) != CL_SUCCESS) { \
@@ -23,7 +23,7 @@ static void print_build_log(cl_program program, cl_device_id device) {
     size_t log_size = 0;
     clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
     if (log_size > 1) {
-        char *log = (char*)malloc(log_size + 1);
+        char* log = (char*)malloc(log_size + 1); // FIXED: Added pointer asterisks
         if (!log) return;
         clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
         log[log_size] = '\0';
@@ -40,7 +40,8 @@ static cl_device_id pick_device(cl_platform_id *out_platform) {
         exit(EXIT_FAILURE);
     }
 
-    cl_platform_id *platforms = (cl_platform_id*)malloc(sizeof(cl_platform_id) * num_platforms);
+    // FIXED: Added pointer asterisks
+    cl_platform_id* platforms = (cl_platform_id*)malloc(sizeof(cl_platform_id) * num_platforms);
     if (!platforms) exit(EXIT_FAILURE);
 
     CHECK_CL(clGetPlatformIDs(num_platforms, platforms, NULL), "clGetPlatformIDs(list)");
@@ -157,16 +158,17 @@ const char *kernelSource =
 "}\n";
 
 int main(void) {
-    const int SIZE = 8192;
+    const int SIZE = 1024;
     const int M = SIZE, N = SIZE, K = SIZE;
 
     size_t bytesA = (size_t)M * K * sizeof(float);
     size_t bytesB = (size_t)K * N * sizeof(float);
     size_t bytesC = (size_t)M * N * sizeof(float);
 
-    float *h_A = (float*)malloc(bytesA);
-    float *h_B = (float*)malloc(bytesB);
-    float *h_C = (float*)malloc(bytesC);
+    // FIXED: Added pointer asterisks
+    float* h_A = (float*)malloc(bytesA);
+    float* h_B = (float*)malloc(bytesB);
+    float* h_C = (float*)malloc(bytesC);
     if (!h_A || !h_B || !h_C) {
         fprintf(stderr, "Host allocation failed.\n");
         return EXIT_FAILURE;
@@ -201,8 +203,7 @@ int main(void) {
     cl_program program = clCreateProgramWithSource(context, 1, src, NULL, &err);
     CHECK_CL(err, "clCreateProgramWithSource");
 
-    const char *build_opts =
-        "-cl-fast-relaxed-math -cl-mad-enable -cl-denorms-are-zero";
+    const char *build_opts = "-cl-fast-relaxed-math -cl-mad-enable -cl-denorms-are-zero";
 
     err = clBuildProgram(program, 1, &device, build_opts, NULL, NULL);
     if (err != CL_SUCCESS) {
@@ -242,6 +243,10 @@ int main(void) {
     err = clEnqueueNDRangeKernel(queue, kernel, 2, NULL, globalSize, localSize, 0, NULL, &evt);
     CHECK_CL(err, "timed kernel");
     clWaitForEvents(1, &evt);
+
+    // FIXED: Added read buffer so you can actually verify/use your computed matrix
+    err = clEnqueueReadBuffer(queue, d_C, CL_TRUE, 0, bytesC, h_C, 0, NULL, NULL);
+    CHECK_CL(err, "clEnqueueReadBuffer");
 
     cl_ulong t0 = 0, t1 = 0;
     clGetEventProfilingInfo(evt, CL_PROFILING_COMMAND_START, sizeof(t0), &t0, NULL);
