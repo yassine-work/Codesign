@@ -1,0 +1,37 @@
+1-)
+clinfo | grep -iE "Device Name|Device Version|Global memory size|Local memory size|Global memory cache size|Max compute units|Max work item sizes|Max work group size"
+  Device Name                                     NVIDIA GeForce RTX 3050 Laptop GPU
+  Device Version                                  OpenCL 3.0 CUDA
+  Max compute units                               16
+  Max work item sizes                             1024x1024x64
+  Max work group size                             1024
+  Global memory size                              3953393664 (3.682GiB)
+  Global Memory cache size                        458752 (448KiB)
+  Local memory size                               49152 (48KiB)
+  Device Name                                     cpu-haswell-12th Gen Intel(R) Core(TM) i5-12500H
+  Device Version                                  OpenCL 3.0 PoCL HSTR: cpu-x86_64-pc-linux-gnu-haswell
+  Max compute units                               16
+  Max work item sizes                             4096x4096x4096
+  Max work group size                             4096
+  Global memory size                              28956827648 (26.97GiB)
+  Global Memory cache size                        18874368 (18MiB)
+  Local memory size                               1310720 (1.25MiB)
+  Device Name                                     NVIDIA GeForce RTX 3050 Laptop GPU
+  Device Version                                  OpenCL 3.0 PoCL HSTR: CUDA-sm_75
+  Max compute units                               16
+  Max work item sizes                             1024x1024x64
+  Max work group size                             1024
+  Global memory size                              3953393664 (3.682GiB)
+  Local memory size                               49152 (48KiB)
+  Device Name                                     Intel(R) UHD Graphics
+  Device Version                                  OpenCL 3.0 NEO 
+  Max compute units                               80
+  Max work item sizes                             512x512x512
+  Max work group size                             512
+  Global memory size                              30784827392 (28.67GiB)
+  Global Memory cache size                        491520 (480KiB)
+  Local memory size                               65536 (64KiB)
+
+
+
+655.97
